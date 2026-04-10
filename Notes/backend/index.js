@@ -28,7 +28,7 @@ app.get('/api/notes', (request, response) => {
   })
 })
 
-app.get('/api/notes/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response, next) => {
   Note.findById(request.params.id)
     .then(note => {
       if (note) {
@@ -41,7 +41,7 @@ app.get('/api/notes/:id', (request, response) => {
 })
 
 
-app.delete('/api/notes/:id', (request, response) => {
+app.delete('/api/notes/:id', (request, response, next) => {
   Note.findByIdAndDelete(request.params.id)
     .then(result => {
       response.status(204).end()
@@ -50,7 +50,7 @@ app.delete('/api/notes/:id', (request, response) => {
 })
 
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const body = request.body
 
   if (!body.content) {
@@ -66,7 +66,7 @@ app.post('/api/notes', (request, response) => {
 
   note.save().then(savedNote => {
     response.json(savedNote)
-  })
+  }).catch(error => next(error))
 })
 
 app.put('/api/notes/:id', (request, response, next) => {
